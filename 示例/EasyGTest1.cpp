@@ -4,50 +4,50 @@
 using namespace std;
 using namespace EasyG;
 
-//»­Á½¸öÏà½»µÄÍ¸Ã÷¾ØĞÎ£¬ÇÒÊÊÓ¦ÆÁÄ»À­Éì
-int main()
+//ç”»ä¸¤ä¸ªç›¸äº¤çš„é€æ˜çŸ©å½¢ï¼Œä¸”é€‚åº”å±å¹•æ‹‰ä¼¸
+int test1()
 {
     EasyWindow win;
     win.Create(EasyWindowSets(L"", SIZE{ 512,512 }, nullptr, nullptr, EWF_HIDECONSOLE, 0));
-    //´´½¨Ò»¸ö´°¿Ú£¬Ä¬ÈÏ±êÌâ£¬´óĞ¡Îª 512*512£¬ÎŞ¸½¼Ó´°¿Ú¹ı³Ìº¯Êı£¬ÎŞ¸¸´°¿Ú£¬´øÒş²Ø¿ØÖÆÌ¨±êÇ©£¬ÎŞ¶îÍâÑùÊ½
+    //åˆ›å»ºä¸€ä¸ªçª—å£ï¼Œé»˜è®¤æ ‡é¢˜ï¼Œå¤§å°ä¸º 512*512ï¼Œæ— é™„åŠ çª—å£è¿‡ç¨‹å‡½æ•°ï¼Œæ— çˆ¶çª—å£ï¼Œå¸¦éšè—æ§åˆ¶å°æ ‡ç­¾ï¼Œæ— é¢å¤–æ ·å¼
 
     constexpr auto CANVASSIZE = 256;
     EasyCanvas canvas2(CANVASSIZE, CANVASSIZE);
-    //´´½¨»­²¼£¬´óĞ¡Îª CANVASSIZE*CANVASSIZE
+    //åˆ›å»ºç”»å¸ƒï¼Œå¤§å°ä¸º CANVASSIZE*CANVASSIZE
 
     win.SetCanvas(&canvas2);
-    //½«´°¿ÚµÄ»­²¼ÉèÎª canvas2
+    //å°†çª—å£çš„ç”»å¸ƒè®¾ä¸º canvas2
 
     win.GetInfo().bStretch = 1;
-    //½«Ê¹ÓÃ´°¿ÚÀ­ÉìÉèÖÃÎª¿ªÆô
+    //å°†ä½¿ç”¨çª—å£æ‹‰ä¼¸è®¾ç½®ä¸ºå¼€å¯
 
     EasyMessage msg;
     while (1)
     {
         if (!win.isAlive())
             break;
-        //Èô´°¿ÚÏú»Ù¾ÍÍË³ö£¬ÔÚ£ºÊ¹ÓÃº¯Êı win.Destroy() »ò µã»÷´°¿ÚµÄ¹Ø±Õ°´Å¥ Ê±£¬½á¹ûÎª false
+        //è‹¥çª—å£é”€æ¯å°±é€€å‡ºï¼Œåœ¨ï¼šä½¿ç”¨å‡½æ•° win.Destroy() æˆ– ç‚¹å‡»çª—å£çš„å…³é—­æŒ‰é’® æ—¶ï¼Œç»“æœä¸º false
 
         win.GetMessage(&msg);
-        //½«ÏûÏ¢´æÈë msg£¬ÔÚÃ»ÓĞĞÂÏûÏ¢Ê±µÈ´ı
+        //å°†æ¶ˆæ¯å­˜å…¥ msgï¼Œåœ¨æ²¡æœ‰æ–°æ¶ˆæ¯æ—¶ç­‰å¾…
 
         EasyMessage Emsg(msg);
         switch (msg.message) {
         case WM_LBUTTONUP: {
             EasyCanvas canvas3(1024, 1024);
             EasyImage image1(1024, 1024), image2(1024, 1024);
-            //´´½¨»­²¼ÓëÍ¼Æ¬
+            //åˆ›å»ºç”»å¸ƒä¸å›¾ç‰‡
 
             canvas3.SetPenColor(REDCOLOR);
             canvas3.SetBrushColor(BLUECOLOR);
             canvas3.FillRect(100, 50, 150, 250);
-            //ÉèÖÃ±ß¿òºÍÌî³äÑÕÉ«£¬²¢»­¾ØĞÎ
+            //è®¾ç½®è¾¹æ¡†å’Œå¡«å……é¢œè‰²ï¼Œå¹¶ç”»çŸ©å½¢
 
             canvas3.BitBlt(image1.ImageDC_Src);
-            //½«»­»­ÔÚ image1 µÄ HDC ÖĞ£¬Ò²¿ÉÒÔ»­ÔÚÆäËû HDC ÖĞ
+            //å°†ç”»ç”»åœ¨ image1 çš„ HDC ä¸­ï¼Œä¹Ÿå¯ä»¥ç”»åœ¨å…¶ä»– HDC ä¸­
 
             canvas3.Clear();
-            //Çå³ı canvas3 µÄ»­
+            //æ¸…é™¤ canvas3 çš„ç”»
 
             canvas3.SetPenColor(YELLOWCOLOR);
             canvas3.SetBrushColor(GREENCOLOR);
@@ -57,25 +57,25 @@ int main()
 
             canvas2.Clear();
             image1.AlphaBlend(canvas3.ImageDC_Src);
-            //½« image1 µÄÍ¼ĞÎ»­ÔÚ canvas3 µÄ HDC ÉÏ£¬¸½¼ÓÍ¸Ã÷¶È 255£¨µÈÓÚ¸²¸Ç£©
+            //å°† image1 çš„å›¾å½¢ç”»åœ¨ canvas3 çš„ HDC ä¸Šï¼Œé™„åŠ é€æ˜åº¦ 255ï¼ˆç­‰äºè¦†ç›–ï¼‰
 
             image2.AlphaBlend(canvas3.ImageDC_Src, NULLPTSZ, NULLPTSZ, 127);
-            //½« image2 µÄÍ¼ĞÎ»­ÔÚ canvas3 µÄ HDC ÉÏ£¬¸½¼ÓÍ¸Ã÷¶È 177£¬Ê¹ÓÃ image2 µÄ³¤¿í£¬¼´²»À­Éì
+            //å°† image2 çš„å›¾å½¢ç”»åœ¨ canvas3 çš„ HDC ä¸Šï¼Œé™„åŠ é€æ˜åº¦ 177ï¼Œä½¿ç”¨ image2 çš„é•¿å®½ï¼Œå³ä¸æ‹‰ä¼¸
 
             canvas3.Flush();
-            //½«canvas3µÄÍ¼ĞÎ´ÓÔ´ HDC »­µ½ Êä³ö HDC ÖĞ
-            //ÓÉÓÚÖ±½Ó²Ù¿Ø canvas3 µÄ HDC £¬Ó¦¸ÃÊ¹ÓÃ Update() ¸üĞÂ×´Ì¬£¬ÒòÎªÕâÀïÒ»¶¨Òª»­Í¼£¬ËùÒÔÊ¹ÓÃ Flush()
+            //å°†canvas3çš„å›¾å½¢ä»æº HDC ç”»åˆ° è¾“å‡º HDC ä¸­
+            //ç”±äºç›´æ¥æ“æ§ canvas3 çš„ HDC ï¼Œåº”è¯¥ä½¿ç”¨ Update() æ›´æ–°çŠ¶æ€ï¼Œå› ä¸ºè¿™é‡Œä¸€å®šè¦ç”»å›¾ï¼Œæ‰€ä»¥ä½¿ç”¨ Flush()
 
             canvas3.BitBlt(canvas2.ImageDC_Src);
-            //½«canvas3µÄÍ¼ĞÎ»­µ½ canvas2 µÄ HDC ÖĞ
+            //å°†canvas3çš„å›¾å½¢ç”»åˆ° canvas2 çš„ HDC ä¸­
 
             canvas2.Flush();
 
             break;
 
             /*
-            //Ò²¿ÉÒÔÖ±½Ó»­ÔÚ canvas2 ÉÏ
-            //canvas3.Clear();                                                    //Ã»±ØÒª
+            //ä¹Ÿå¯ä»¥ç›´æ¥ç”»åœ¨ canvas2 ä¸Š
+            //canvas3.Clear();                                                    //æ²¡å¿…è¦
             canvas3.SetPenColor(REDCOLOR);
             canvas3.SetBrushColor(BLUECOLOR);
             canvas3.FillRect(100, 50, 150, 250);
