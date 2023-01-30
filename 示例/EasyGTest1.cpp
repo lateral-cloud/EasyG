@@ -75,7 +75,7 @@ int test1()
 
             /*
             //也可以直接画在 canvas2 上
-            //canvas3.Clear();                                                    //没必要
+            //canvas3.Clear();                                                   //没必要
             canvas3.SetPenColor(REDCOLOR);
             canvas3.SetBrushColor(BLUECOLOR);
             canvas3.FillRect(100, 50, 150, 250);
