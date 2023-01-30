@@ -1,0 +1,277 @@
+#pragma once
+
+#include "EasyColor.h"
+#include "EasyTypes.h"
+
+_EASYG_BEGIN
+
+HPEN CloneHPen(HPEN hPen) noexcept;
+HBRUSH CloneHBrush(HBRUSH hBrush) noexcept;
+HFONT CloneHFont(HFONT hFont) noexcept;
+HBITMAP CloneHBitmap(HBITMAP hBitmap) noexcept;
+
+class EasyHDC
+{
+public:
+	static constexpr LOGPEN DefaultLogPen{ PS_SOLID,POINT{(LONG)(1),0},0xffffff };
+	static constexpr LOGBRUSH DefaultLogBrush{ BS_SOLID,0xffffff,NULL };
+	static constexpr LOGFONT DefaultLogFont{ 0,0,0,0,400,0,0,0,0,0,0,0,0,_TEXT("") };
+public:
+	HDC ImageDC_Src;
+
+	EasyHDC() noexcept = default;
+	EasyHDC(LONG cx, LONG cy, COLORREF bkColor = BLACKCOLOR) noexcept;
+	EasyHDC(const SIZE& size, COLORREF bkColor = BLACKCOLOR) noexcept;
+	EasyHDC(const EasyHDC&) noexcept;
+	EasyHDC(EasyHDC&&) noexcept;
+	EasyHDC(const EasyHDC&, COLORREF bkColor) noexcept;
+	EasyHDC(EasyHDC&&, COLORREF bkColor) noexcept;
+	~EasyHDC() noexcept;
+
+	static EasyHDC* WINAPI FromHandle(HDC hdc) noexcept { return (EasyHDC*)hdc; }
+
+	EasyHDC& WINAPI operator=(const EasyHDC&) noexcept;
+	EasyHDC& WINAPI operator=(EasyHDC&&) noexcept;
+
+	EasyHDC WINAPI Clone() const noexcept;
+	void WINAPI Detach() noexcept;
+	void WINAPI Destroy() noexcept;
+	COLORREF* WINAPI Create(LONG cx, LONG cy, COLORREF bkColor = BLACKCOLOR) noexcept;
+	COLORREF* WINAPI Create(const SIZE& size, COLORREF bkColor = BLACKCOLOR) noexcept;
+	void WINAPI Resize(LONG cx, LONG cy) noexcept;
+	void WINAPI Resize(const SIZE& size) noexcept;
+	EasyHDC WINAPI Alpha(BYTE alpha, BYTE AlphaFormat = 0) const noexcept;
+	EasyHDC WINAPI Cut(LONG x, LONG y, LONG cx, LONG cy) const noexcept;
+	EasyHDC WINAPI Cut(const PTSZ& prect) const noexcept;
+
+	COLORREF WINAPI SetPixel(int x, int y, COLORREF color) noexcept;
+	COLORREF WINAPI SetPixel(const POINT& point, COLORREF color) noexcept;
+	void WINAPI SetPixelV(int x, int y, COLORREF color) noexcept;
+	void WINAPI SetPixelV(const POINT& point, COLORREF color) noexcept;
+	void WINAPI SetPixel_Fast(int x, int y, COLORREF color) noexcept;
+	void WINAPI SetPixel_Fast(const POINT& point, COLORREF color) noexcept;
+	COLORREF WINAPI GetPixel(int x, int y) const noexcept;
+	COLORREF WINAPI GetPixel(const POINT& point) const noexcept;
+	COLORREF WINAPI GetPixel_Fast(int x, int y) const noexcept;
+	COLORREF WINAPI GetPixel_Fast(const POINT& point) const noexcept;
+
+	void WINAPI BitBlt(HDC hdc, int x = 0, int y = 0, int cx = 0, int cy = 0, int x1 = 0, int y1 = 0, DWORD rop = SRCCOPY) const noexcept;
+	void WINAPI BitBlt(HDC hdc, PTSZ Dst, POINT Src = {}, DWORD rop = SRCCOPY) const noexcept;
+	void WINAPI StretchBlt(HDC hdc, int x = 0, int y = 0, int cx = 0, int cy = 0, int x1 = 0, int y1 = 0, int cx1 = 0, int cy1 = 0, DWORD rop = SRCCOPY) const noexcept;
+	void WINAPI StretchBlt(HDC hdc, PTSZ Dst, PTSZ Src = {}, DWORD rop = SRCCOPY) const noexcept;
+	void WINAPI TransparentBlt(HDC hdc, int x, int y, int cx, int cy, int x1, int y1, int cx1, int cy1, COLORREF crTransparent) const noexcept;
+	void WINAPI TransparentBlt(HDC hdc, PTSZ Dst, PTSZ Src, COLORREF crTransparent) const noexcept;
+	void WINAPI TransparentBlt(HDC hdc, int x = 0, int y = 0, int cx = 0, int cy = 0, int x1 = 0, int y1 = 0, int cx1 = 0, int cy1 = 0) const noexcept;
+	void WINAPI TransparentBlt(HDC hdc, PTSZ Dst, PTSZ Src = {}) const noexcept;
+	void WINAPI TransparentBlt(HDC hdc, int x, int y, int cx, int cy, int x1, int y1, int cx1, int cy1, const COLORREF* crTransparent, UINT Count = 1) const noexcept;
+	void WINAPI TransparentBlt(HDC hdc, PTSZ Dst, PTSZ Src, const COLORREF* crTransparent, UINT Count = 1) const noexcept;
+	void WINAPI AlphaBlend(HDC hdc, int x = 0, int y = 0, int cx = 0, int cy = 0, int x1 = 0, int y1 = 0, int cx1 = 0, int cy1 = 0, BYTE alpha = 255, BYTE AlphaFormat = 0) const noexcept;
+	void WINAPI AlphaBlend(HDC hdc, PTSZ Dst, PTSZ Src = {}, BYTE alpha = 255, BYTE AlphaFormat = 0) const noexcept;
+	//void WINAPI Output(HDC hdc, const EasyDrawSets& sets) const noexcept;
+
+	void WINAPI SetPenIndirect(const LOGPEN* lplogpen) noexcept;
+	void WINAPI SetPen(HPEN hpen) noexcept;
+	void WINAPI SetPenStyle(UINT style) noexcept;
+	void WINAPI SetPenWidth(LONG width) noexcept;
+	void WINAPI SetPenColor(COLORREF color) noexcept;
+	void WINAPI SetPen(UINT style, LONG width, COLORREF color) noexcept;
+	void WINAPI SetBrushIndirect(const LOGBRUSH* lplogbrush) noexcept;
+	void WINAPI SetPatternBrush(HBITMAP hbm) noexcept;
+	void WINAPI SetBrush(HBRUSH hbrush) noexcept;
+	void WINAPI SetBrushStyle(UINT style) noexcept;
+	void WINAPI SetBrushColor(COLORREF color) noexcept;
+	void WINAPI SetBrushHatch(ULONG_PTR hatch) noexcept;
+	void WINAPI SetBrush(UINT style, COLORREF color, ULONG_PTR hatch) noexcept;
+	void WINAPI SetFontIndirect(const LOGFONT* lplogfont) noexcept;
+	void WINAPI SetFont(HFONT hfont) noexcept;
+	void WINAPI SetFontHeight(LONG lfHeight) noexcept;
+	void WINAPI SetFontWidth(LONG lfWidth) noexcept;
+	void WINAPI SetFontEscapement(LONG lfEscapement) noexcept;
+	void WINAPI SetFontOrientation(LONG lfOrientation) noexcept;
+	void WINAPI SetFontWeight(LONG lfWeight) noexcept;
+	void WINAPI SetFontItalic(BYTE lfItalic) noexcept;
+	void WINAPI SetFontUnderline(BYTE lfUnderline) noexcept;
+	void WINAPI SetFontStrikeOut(BYTE lfStrikeOut) noexcept;
+	void WINAPI SetFontCharSet(BYTE lfCharSet) noexcept;
+	void WINAPI SetFontOutPrecision(BYTE lfOutPrecision) noexcept;
+	void WINAPI SetFontClipPrecision(BYTE lfClipPrecision) noexcept;
+	void WINAPI SetFontQuality(BYTE lfQuality) noexcept;
+	void WINAPI SetFontPitchAndFamily(BYTE lfPitchAndFamily) noexcept;
+	void WINAPI SetFontFaceName(LPCTSTR lfFaceName) noexcept;
+	void WINAPI SetFont(LONG lfHeight, LONG lfWidth, LONG lfEscapement, LONG lfOrientation, LONG lfWeight, BYTE lfItalic, BYTE lfUnderline, BYTE lfStrikeOut,
+		BYTE lfCharSet, BYTE lfOutPrecision, BYTE lfClipPrecision, BYTE lfQuality, BYTE lfPitchAndFamily, LPCTSTR lfFaceName) noexcept;
+	void WINAPI SetTextAlign(UINT align) noexcept;
+	void WINAPI SetTextCharacterExtra(int extra) noexcept;
+	void WINAPI SetTextColor(COLORREF color) noexcept;
+	void WINAPI SetTextJustification(int extra, int count) noexcept;
+	void WINAPI SetBitmap(HBITMAP bmp) noexcept;
+	void WINAPI SetBitmapBits(const COLORREF* pBits) noexcept;
+	void WINAPI SetBkColor(COLORREF color) noexcept;
+	void WINAPI SetBkMode(int mode) noexcept;
+	void WINAPI GetLogPen(LPLOGPEN lplogpen) const noexcept;
+	LOGPEN WINAPI GetLogPen() const noexcept;
+	HPEN WINAPI GetHPen() const noexcept;
+	void WINAPI GetLogBrush(LPLOGBRUSH lplogbrush) const noexcept;
+	LOGBRUSH WINAPI GetLogBrush() const noexcept;
+	HBRUSH WINAPI GetHBrush() const noexcept;
+	void WINAPI GetLogFont(LPLOGFONT lplogfont) const noexcept;
+	LOGFONT WINAPI GetLogFont() const noexcept;
+	HFONT WINAPI GetHFont() const noexcept;
+	int WINAPI GetTextFace(int count, LPTSTR lpName) const noexcept;
+	UINT WINAPI GetTextAlign() const noexcept;
+	int WINAPI GetTextCharacterExtra() const noexcept;
+	COLORREF WINAPI GetTextColor() const noexcept;
+	void WINAPI GetTextSize(TCHAR ch, LPSIZE lpsz) const noexcept;
+	void WINAPI GetTextSize(LPCTSTR str, LPSIZE lpsz, int count = -1) const noexcept;
+	SIZE WINAPI GetTextSize(TCHAR ch) const noexcept;
+	SIZE WINAPI GetTextSize(LPCTSTR str, int count = -1) const noexcept;
+	int WINAPI GetTextWidth(TCHAR ch) const noexcept;
+	int WINAPI GetTextWidth(LPCTSTR str, int count = -1) const noexcept;
+	int WINAPI GetTextHeight(TCHAR ch) const noexcept;
+	int WINAPI GetTextHeight(LPCTSTR str, int count = -1) const noexcept;
+	HBITMAP WINAPI GetHBitmap() const noexcept;
+	BITMAP WINAPI GetBitmap() const noexcept;
+	COLORREF* WINAPI GetBitmapBits() noexcept;
+	const COLORREF* WINAPI GetBitmapBits() const noexcept;
+	SIZE WINAPI GetBitmapSize() const noexcept;
+	COLORREF WINAPI GetBkColor() const noexcept;
+	int WINAPI GetBkMode() const noexcept;
+
+	HPEN WINAPI CloneHPen() const noexcept;
+	HBRUSH WINAPI CloneHBrush() const noexcept;
+	HFONT WINAPI CloneHFont() const noexcept;
+	HBITMAP WINAPI CloneHBitmap() const noexcept;
+
+	void WINAPI MoveToEx(int x, int y, LPPOINT lppoint = NULL) noexcept;
+	void WINAPI MoveToEx(const POINT* topoint, LPPOINT lppoint = NULL) noexcept;
+	void WINAPI MoveTo(int x, int y, LPPOINT lppoint = NULL) noexcept;
+	void WINAPI MoveTo(const POINT* topoint, LPPOINT lppoint = NULL) noexcept;
+	void WINAPI LineTo(int x, int y) noexcept;
+	void WINAPI LineTo(const POINT* lppoint) noexcept;
+	void WINAPI Line(int x1, int y1, int x2, int y2) noexcept;
+	void WINAPI Line(const POINT* lpf, const POINT* lpt) noexcept;
+	void WINAPI LineRect(int left, int top, int right, int bottom) noexcept;
+	void WINAPI LineRect(LPCRECT lprect) noexcept;
+	void WINAPI ClearLineRect(int left, int top, int right, int bottom) noexcept;
+	void WINAPI ClearLineRect(LPCRECT lprect) noexcept;
+	void WINAPI SolidRect(int left, int top, int right, int bottom) noexcept;
+	void WINAPI SolidRect(LPCRECT lprect) noexcept;
+	void WINAPI ClearSolidRect(int left, int top, int right, int bottom) noexcept;
+	void WINAPI ClearSolidRect(LPCRECT lprect) noexcept;
+	void WINAPI FillRect(int left, int top, int right, int bottom) noexcept;
+	void WINAPI FillRect(LPCRECT lprect) noexcept;
+	void WINAPI ClearFillRect(int left, int top, int right, int bottom) noexcept;
+	void WINAPI ClearFillRect(LPCRECT lprect) noexcept;
+	void WINAPI Rectangle(int left, int top, int right, int bottom) noexcept;
+	void WINAPI Rectangle(LPCRECT lprect) noexcept;
+	void WINAPI ClearRect(int left, int top, int right, int bottom) noexcept;
+	void WINAPI ClearRect(LPCRECT lprect) noexcept;
+	void WINAPI SolidRgn(HRGN hrgn) noexcept;
+	void WINAPI ClearSolidRgn(HRGN hrgn) noexcept;
+	void WINAPI FillRgn(HRGN hrgn) noexcept;
+	void WINAPI ClearRgn(HRGN hrgn) noexcept;
+	void WINAPI LineEllipse(int left, int top, int right, int bottom) noexcept;
+	void WINAPI LineEllipse(LPCRECT lprect) noexcept;
+	void WINAPI ClearLineEllipse(int left, int top, int right, int bottom) noexcept;
+	void WINAPI ClearLineEllipse(LPCRECT lprect) noexcept;
+	void WINAPI SolidEllipse(int left, int top, int right, int bottom) noexcept;
+	void WINAPI SolidEllipse(LPCRECT lprect) noexcept;
+	void WINAPI ClearSolidEllipse(int left, int top, int right, int bottom) noexcept;
+	void WINAPI ClearSolidEllipse(LPCRECT lprect) noexcept;
+	void WINAPI FillEllipse(int left, int top, int right, int bottom) noexcept;
+	void WINAPI FillEllipse(LPCRECT lprect) noexcept;
+	void WINAPI ClearFillEllipse(int left, int top, int right, int bottom) noexcept;
+	void WINAPI ClearFillEllipse(LPCRECT lprect) noexcept;
+	void WINAPI Ellipse(int left, int top, int right, int bottom) noexcept;
+	void WINAPI Ellipse(LPCRECT lprect) noexcept;
+	void WINAPI ClearEllipse(int left, int top, int right, int bottom) noexcept;
+	void WINAPI ClearEllipse(LPCRECT lprect) noexcept;
+	void WINAPI LineCircle(int x, int y, int r) noexcept;
+	void WINAPI LineCircle(const POINT* lppoint, int r) noexcept;
+	void WINAPI ClearLineCircle(int x, int y, int r) noexcept;
+	void WINAPI ClearLineCircle(const POINT* lppoint, int r) noexcept;
+	void WINAPI SolidCircle(int x, int y, int r) noexcept;
+	void WINAPI SolidCircle(const POINT* lppoint, int r) noexcept;
+	void WINAPI ClearSolidCircle(int x, int y, int r) noexcept;
+	void WINAPI ClearSolidCircle(const POINT* lppoint, int r) noexcept;
+	void WINAPI FillCircle(int x, int y, int r) noexcept;
+	void WINAPI FillCircle(const POINT* lppoint, int r) noexcept;
+	void WINAPI ClearFillCircle(int x, int y, int r) noexcept;
+	void WINAPI ClearFillCircle(const POINT* lppoint, int r) noexcept;
+	void WINAPI Circle(int x, int y, int r) noexcept;
+	void WINAPI Circle(const POINT* lppoint, int r) noexcept;
+	void WINAPI ClearCircle(int x, int y, int r) noexcept;
+	void WINAPI ClearCircle(const POINT* lppoint, int r) noexcept;
+	void WINAPI LineRoundRect(int left, int top, int right, int bottom, int width, int height) noexcept;
+	void WINAPI LineRoundRect(LPCRECT lprect, int width, int height) noexcept;
+	void WINAPI ClearLineRoundRect(int left, int top, int right, int bottom, int width, int height) noexcept;
+	void WINAPI ClearLineRoundRect(LPCRECT lprect, int width, int height) noexcept;
+	void WINAPI SolidRoundRect(int left, int top, int right, int bottom, int width, int height) noexcept;
+	void WINAPI SolidRoundRect(LPCRECT lprect, int width, int height) noexcept;
+	void WINAPI ClearSolidRoundRect(int left, int top, int right, int bottom, int width, int height) noexcept;
+	void WINAPI ClearSolidRoundRect(LPCRECT lprect, int width, int height) noexcept;
+	void WINAPI FillRoundRect(int left, int top, int right, int bottom, int width, int height) noexcept;
+	void WINAPI FillRoundRect(LPCRECT lprect, int width, int height) noexcept;
+	void WINAPI ClearFillRoundRect(int left, int top, int right, int bottom, int width, int height) noexcept;
+	void WINAPI ClearFillRoundRect(LPCRECT lprect, int width, int height) noexcept;
+	void WINAPI RoundRect(int left, int top, int right, int bottom, int width, int height) noexcept;
+	void WINAPI RoundRect(LPCRECT lprect, int width, int height) noexcept;
+	void WINAPI ClearRoundRect(int left, int top, int right, int bottom, int width, int height) noexcept;
+	void WINAPI ClearRoundRect(LPCRECT lprect, int width, int height) noexcept;
+	void WINAPI Arc(int left, int top, int right, int bottom, int x1, int y1, int x2, int y2) noexcept;
+	void WINAPI Arc(LPCRECT lprect, const POINT* lpp1, const POINT* lpp2) noexcept;
+	void WINAPI ArcTo(int left, int top, int right, int bottom, int x1, int y1, int x2, int y2) noexcept;
+	void WINAPI ArcTo(LPCRECT lprect, const POINT* lpp1, const POINT* lpp2) noexcept;
+	void WINAPI LinePie(int left, int top, int right, int bottom, int x1, int y1, int x2, int y2) noexcept;
+	void WINAPI LinePie(LPCRECT lprect, const POINT* lpp1, const POINT* lpp2) noexcept;
+	void WINAPI ClearLinePie(int left, int top, int right, int bottom, int x1, int y1, int x2, int y2) noexcept;
+	void WINAPI ClearLinePie(LPCRECT lprect, const POINT* lpp1, const POINT* lpp2) noexcept;
+	void WINAPI SolidPie(int left, int top, int right, int bottom, int x1, int y1, int x2, int y2) noexcept;
+	void WINAPI SolidPie(LPCRECT lprect, const POINT* lpp1, const POINT* lpp2) noexcept;
+	void WINAPI ClearSolidPie(int left, int top, int right, int bottom, int x1, int y1, int x2, int y2) noexcept;
+	void WINAPI ClearSolidPie(LPCRECT lprect, const POINT* lpp1, const POINT* lpp2) noexcept;
+	void WINAPI FillPie(int left, int top, int right, int bottom, int x1, int y1, int x2, int y2) noexcept;
+	void WINAPI FillPie(LPCRECT lprect, const POINT* lpp1, const POINT* lpp2) noexcept;
+	void WINAPI ClearFillPie(int left, int top, int right, int bottom, int x1, int y1, int x2, int y2) noexcept;
+	void WINAPI ClearFillPie(LPCRECT lprect, const POINT* lpp1, const POINT* lpp2) noexcept;
+	void WINAPI Pie(int left, int top, int right, int bottom, int x1, int y1, int x2, int y2) noexcept;
+	void WINAPI Pie(LPCRECT lprect, const POINT* lpp1, const POINT* lpp2) noexcept;
+	void WINAPI ClearPie(int left, int top, int right, int bottom, int x1, int y1, int x2, int y2) noexcept;
+	void WINAPI ClearPie(LPCRECT lprect, const POINT* lpp1, const POINT* lpp2) noexcept;
+	void WINAPI LinePolygon(const POINT* apt, int cpt) noexcept;
+	void WINAPI ClearLinePolygon(const POINT* apt, int cpt) noexcept;
+	void WINAPI SolidPolygon(const POINT* apt, int cpt) noexcept;
+	void WINAPI ClearSolidPolygon(const POINT* apt, int cpt) noexcept;
+	void WINAPI FillPolygon(const POINT* apt, int cpt) noexcept;
+	void WINAPI ClearFillPolygon(const POINT* apt, int cpt) noexcept;
+	void WINAPI Polygon(const POINT* apt, int cpt) noexcept;
+	void WINAPI ClearPolygon(const POINT* apt, int cpt) noexcept;
+	void WINAPI PolyLine(const POINT* apt, int cpt) noexcept;
+	void WINAPI PolyLineTo(const POINT* apt, int cpt) noexcept;
+	void WINAPI PolyBezier(const POINT* apt, int cpt) noexcept;
+	void WINAPI PolyBezierTo(const POINT* apt, int cpt) noexcept;
+	void WINAPI FloodFill(int x, int y, COLORREF color, UINT type = FLOODFILLBORDER) noexcept;
+	void WINAPI FloodFill(const POINT* lppoint, COLORREF color, UINT type = FLOODFILLBORDER) noexcept;
+	void WINAPI Fill() noexcept;
+	void WINAPI Solid() noexcept;
+	void WINAPI Clear() noexcept;
+	void WINAPI OutTextExXY(int x, int y, LPCTSTR str, UINT options = ETO_CLIPPED, LPCRECT lprect = NULL, const int* lpDx = NULL, int count = -1) noexcept;
+	void WINAPI OutTextExXY(int x, int y, TCHAR ch, UINT options = ETO_CLIPPED, LPCRECT lprect = NULL, const int* lpDx = NULL) noexcept;
+	void WINAPI OutTextXY(int x, int y, LPCTSTR str, int count = -1) noexcept;
+	void WINAPI OutTextXY(int x, int y, TCHAR ch) noexcept;
+	void WINAPI DrawCTextEx(LPCTSTR str, PRECT prect, UINT format, LPDRAWTEXTPARAMS lpdtp = NULL, int count = -1) noexcept;
+	void WINAPI DrawCTextEx(TCHAR ch, PRECT prect, UINT format, LPDRAWTEXTPARAMS lpdtp = NULL) noexcept;
+	void WINAPI DrawCText(LPCTSTR str, PRECT prect, UINT format, int count = -1) noexcept;
+	void WINAPI DrawCText(TCHAR ch, PRECT prect, UINT format) noexcept;
+	void WINAPI DrawTextEx(LPCTSTR str, PRECT prect, UINT format, LPDRAWTEXTPARAMS lpdtp = NULL, int count = -1) noexcept;
+	void WINAPI DrawTextEx(TCHAR ch, PRECT prect, UINT format, LPDRAWTEXTPARAMS lpdtp = NULL) noexcept;
+	void WINAPI DrawText(LPCTSTR str, PRECT prect, UINT format, int count = -1) noexcept;
+	void WINAPI DrawText(TCHAR ch, PRECT prect, UINT format) noexcept;
+	void WINAPI DrawTextEx(LPTSTR str, PRECT prect, UINT format, LPDRAWTEXTPARAMS lpdtp = NULL, int count = -1) noexcept;
+	void WINAPI DrawText(LPTSTR str, PRECT prect, UINT format, int count = -1) noexcept;
+
+	EasyHDC& WINAPI Src() noexcept;
+	const EasyHDC& WINAPI Src() const noexcept;
+};
+
+_EASYG_END
