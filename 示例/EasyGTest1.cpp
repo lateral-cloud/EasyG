@@ -62,7 +62,7 @@ int test1()
             image2.AlphaBlend(canvas3.ImageDC_Src, NULLPTSZ, NULLPTSZ, 127);
             //将 image2 的图形画在 canvas3 的 HDC 上，附加透明度 177，使用 image2 的长宽，即不拉伸
 
-            canvas3.Flush();1
+            canvas3.Flush();
             //将canvas3的图形从源 HDC 画到 输出 HDC 中
             //由于直接操控 canvas3 的 HDC ，应该使用 Update() 更新状态，因为这里一定要画图，所以使用 Flush()
 
